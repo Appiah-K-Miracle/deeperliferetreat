@@ -24,7 +24,7 @@ const plusJakartaSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Soul Winners Retreat",
+  title: "Deeper Life Retreat",
   description: "Retreat registration system",
 };
 

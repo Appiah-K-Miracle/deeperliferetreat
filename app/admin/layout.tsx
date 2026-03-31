@@ -10,6 +10,7 @@ import {
   BarChart3,
   Settings,
   Menu,
+  PhoneIncomingIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -25,8 +26,8 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/admin" },
   { label: "Registrations", icon: Users, href: "/admin/adminregister" },
-  { label: "Analytics", icon: BarChart3, href: "/admin/analytics" },
-  { label: "Settings", icon: Settings, href: "/admin/settings" },
+  { label: "Altar Call", icon: PhoneIncomingIcon, href: "/admin/altercall" },
+  // { label: "Settings", icon: Settings, href: "/admin/settings" },
 ];
 
 function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
@@ -84,7 +85,7 @@ function SidebarNav({ onNavigate }: { onNavigate?: () => void }) {
 
       {/* Footer */}
       <div className="px-4 py-4">
-        <p className="text-xs text-slate-500">Soul Winners Retreat 2026</p>
+        <p className="text-xs text-slate-500">Golory Of Christ's Resurrection 2026</p>
       </div>
     </div>
   );
@@ -104,6 +105,8 @@ export default function AdminLayout({
       ? "Admin Dashboard"
       : pathname.startsWith("/admin/adminregister")
       ? "Register Person"
+      : pathname.startsWith("/admin/altercall")
+      ? "Altar Call"
       : "Admin";
 
   const pageSubtitle =
@@ -111,6 +114,8 @@ export default function AdminLayout({
       ? "Retreat Registration Overview"
       : pathname.startsWith("/admin/adminregister")
       ? "Add a new registration manually"
+      : pathname.startsWith("/admin/altercall")
+      ? "Manage altar call responses"
       : "";
 
   return (

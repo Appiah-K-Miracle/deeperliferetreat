@@ -36,6 +36,7 @@ export async function PUT(
         fullName: body.fullName,
         group: body.group,
         district: body.district,
+        location: body.location ?? null,
         status: body.status,
         gender: body.gender,
         phone: normalizedPhone,

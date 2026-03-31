@@ -51,7 +51,8 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Registration: 'Registration'
+  Registration: 'Registration',
+  AltarCall: 'AltarCall'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -74,6 +75,7 @@ export const RegistrationScalarFieldEnum = {
   id: 'id',
   group: 'group',
   district: 'district',
+  location: 'location',
   status: 'status',
   fullName: 'fullName',
   gender: 'gender',
@@ -83,6 +85,20 @@ export const RegistrationScalarFieldEnum = {
 } as const
 
 export type RegistrationScalarFieldEnum = (typeof RegistrationScalarFieldEnum)[keyof typeof RegistrationScalarFieldEnum]
+
+
+export const AltarCallScalarFieldEnum = {
+  id: 'id',
+  phone: 'phone',
+  fullName: 'fullName',
+  district: 'district',
+  location: 'location',
+  isFirstTimer: 'isFirstTimer',
+  registrationId: 'registrationId',
+  createdAt: 'createdAt'
+} as const
+
+export type AltarCallScalarFieldEnum = (typeof AltarCallScalarFieldEnum)[keyof typeof AltarCallScalarFieldEnum]
 
 
 export const SortOrder = {

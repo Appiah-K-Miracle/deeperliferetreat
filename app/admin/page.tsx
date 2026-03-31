@@ -17,6 +17,8 @@ import {
   Pencil,
   Trash2,
   Search,
+  FileSpreadsheet,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -47,6 +49,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { DISTRICT_LOCATIONS } from "@/constants";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -59,6 +62,7 @@ interface Registration {
   phone: string;
   gender: string;
   email?: string | null;
+  location?: string | null;
   createdAt: string;
 }
 
@@ -74,7 +78,7 @@ const STATUS_OPTIONS = ["Member", "Visitor"];
 const GENDER_OPTIONS = ["Male", "Female"];
 
 const EMPTY_FORM = {
-  fullName: "", group: "", district: "",
+  fullName: "", group: "", district: "", location: "",
   status: "", gender: "", phone: "", email: "",
 };
 
@@ -115,6 +119,7 @@ function EditDialog({
     fullName: registration.fullName,
     group: registration.group.charAt(0).toUpperCase() + registration.group.slice(1).toLowerCase(),
     district: registration.district,
+    location: registration.location ?? "",
     status: registration.status.charAt(0).toUpperCase() + registration.status.slice(1).toLowerCase(),
     gender: registration.gender.charAt(0).toUpperCase() + registration.gender.slice(1).toLowerCase(),
     phone: registration.phone.startsWith("+233")
@@ -197,11 +202,24 @@ function EditDialog({
           </div>
           <div className="grid gap-1.5">
             <Label>District</Label>
-            <Select value={form.district} onValueChange={(v) => setForm({ ...form, district: v })}>
+            <Select value={form.district} onValueChange={(v) => setForm({ ...form, district: v, location: "" })}>
               <SelectTrigger><SelectValue placeholder="Select district" /></SelectTrigger>
               <SelectContent>{DISTRICT_OPTIONS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
             </Select>
           </div>
+          {(DISTRICT_LOCATIONS[form.district] ?? []).length > 0 && (
+            <div className="grid gap-1.5">
+              <Label>Area</Label>
+              <Select value={form.location} onValueChange={(v) => setForm({ ...form, location: v })}>
+                <SelectTrigger><SelectValue placeholder="Select area" /></SelectTrigger>
+                <SelectContent>
+                  {(DISTRICT_LOCATIONS[form.district] ?? []).map((loc) => (
+                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-1.5">
               <Label>Gender</Label>
@@ -380,11 +398,24 @@ function RegisterDialog({ onSuccess }: { onSuccess: () => void }) {
           </div>
           <div className="grid gap-1.5">
             <Label>District</Label>
-            <Select value={form.district} onValueChange={(v) => setForm({ ...form, district: v })}>
+            <Select value={form.district} onValueChange={(v) => setForm({ ...form, district: v, location: "" })}>
               <SelectTrigger><SelectValue placeholder="Select district" /></SelectTrigger>
               <SelectContent>{DISTRICT_OPTIONS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
             </Select>
           </div>
+          {(DISTRICT_LOCATIONS[form.district] ?? []).length > 0 && (
+            <div className="grid gap-1.5">
+              <Label>Area</Label>
+              <Select value={form.location} onValueChange={(v) => setForm({ ...form, location: v })}>
+                <SelectTrigger><SelectValue placeholder="Select area" /></SelectTrigger>
+                <SelectContent>
+                  {(DISTRICT_LOCATIONS[form.district] ?? []).map((loc) => (
+                    <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <div className="grid gap-1.5">
               <Label>Gender</Label>
@@ -425,7 +456,9 @@ export default function AdminDashboardPage() {
 
   const [groupFilter, setGroupFilter] = useState("all");
   const [districtFilter, setDistrictFilter] = useState("all");
+  const [locationFilter, setLocationFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [genderFilter, setGenderFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
 
@@ -461,14 +494,16 @@ export default function AdminDashboardPage() {
     return allData.filter((r) => {
       if (groupFilter !== "all" && r.group.toLowerCase() !== groupFilter.toLowerCase()) return false;
       if (districtFilter !== "all" && r.district !== districtFilter) return false;
+      if (locationFilter !== "all" && (r.location ?? "") !== locationFilter) return false;
       if (statusFilter !== "all" && r.status.toLowerCase() !== statusFilter.toLowerCase()) return false;
+      if (genderFilter !== "all" && r.gender.toLowerCase() !== genderFilter.toLowerCase()) return false;
       if (search.trim()) {
         const q = search.toLowerCase();
         if (!r.fullName.toLowerCase().includes(q) && !r.phone.includes(q)) return false;
       }
       return true;
     });
-  }, [allData, groupFilter, districtFilter, statusFilter, search]);
+  }, [allData, groupFilter, districtFilter, locationFilter, statusFilter, genderFilter, search]);
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
@@ -477,17 +512,39 @@ export default function AdminDashboardPage() {
   }, [filtered, page]);
 
   // Reset to page 1 whenever filters change
-  useEffect(() => { setPage(1); }, [groupFilter, districtFilter, statusFilter, search]);
+  useEffect(() => { setPage(1); }, [groupFilter, districtFilter, locationFilter, statusFilter, genderFilter, search]);
 
   const hasFilters =
-    groupFilter !== "all" || districtFilter !== "all" ||
-    statusFilter !== "all" || search !== "";
+    groupFilter !== "all" || districtFilter !== "all" || locationFilter !== "all" ||
+    statusFilter !== "all" || genderFilter !== "all" || search !== "";
 
   const resetFilters = () => {
     setGroupFilter("all");
     setDistrictFilter("all");
+    setLocationFilter("all");
     setStatusFilter("all");
+    setGenderFilter("all");
     setSearch("");
+  };
+
+  const buildExportQuery = () => {
+    const params = new URLSearchParams();
+    if (groupFilter    !== "all") params.set("group",    groupFilter);
+    if (districtFilter !== "all") params.set("district", districtFilter);
+    if (locationFilter !== "all") params.set("location", locationFilter);
+    if (statusFilter   !== "all") params.set("status",   statusFilter);
+    if (genderFilter   !== "all") params.set("gender",   genderFilter);
+    return params.toString();
+  };
+
+  const handleExportExcel = () => {
+    const query = buildExportQuery();
+    window.open(`/api/export/excel${query ? `?${query}` : ""}`, "_blank");
+  };
+
+  const handleExportPDF = () => {
+    const query = buildExportQuery();
+    window.open(`/api/export/pdf${query ? `?${query}` : ""}`, "_blank");
   };
 
   return (
@@ -572,7 +629,7 @@ export default function AdminDashboardPage() {
             </SelectContent>
           </Select>
 
-          <Select value={districtFilter} onValueChange={setDistrictFilter}>
+          <Select value={districtFilter} onValueChange={(v) => { setDistrictFilter(v); setLocationFilter("all"); }}>
             <SelectTrigger className="h-8 w-full text-xs border-slate-200">
               <SelectValue placeholder="All Districts" />
             </SelectTrigger>
@@ -582,6 +639,20 @@ export default function AdminDashboardPage() {
             </SelectContent>
           </Select>
 
+          {districtFilter !== "all" && (DISTRICT_LOCATIONS[districtFilter] ?? []).length > 0 && (
+            <Select value={locationFilter} onValueChange={setLocationFilter}>
+              <SelectTrigger className="h-8 w-full text-xs border-slate-200">
+                <SelectValue placeholder="All Areas" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Areas</SelectItem>
+                {(DISTRICT_LOCATIONS[districtFilter] ?? []).map((loc) => (
+                  <SelectItem key={loc} value={loc}>{loc}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="h-8 w-full text-xs border-slate-200">
               <SelectValue placeholder="All Statuses" />
@@ -589,6 +660,16 @@ export default function AdminDashboardPage() {
             <SelectContent>
               <SelectItem value="all">All Statuses</SelectItem>
               {STATUS_OPTIONS.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+            </SelectContent>
+          </Select>
+
+          <Select value={genderFilter} onValueChange={setGenderFilter}>
+            <SelectTrigger className="h-8 w-full text-xs border-slate-200">
+              <SelectValue placeholder="All Genders" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Genders</SelectItem>
+              {GENDER_OPTIONS.map((g) => <SelectItem key={g} value={g}>{g}</SelectItem>)}
             </SelectContent>
           </Select>
 
@@ -603,6 +684,29 @@ export default function AdminDashboardPage() {
             </Button>
           )}
 
+          {/* Export buttons */}
+          <div className="flex items-center gap-1.5 ml-auto shrink-0">
+            <Button
+              variant="outline" size="sm"
+              className="h-8 text-xs gap-1.5 border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+              disabled={filtered.length === 0 || loading}
+              onClick={handleExportExcel}
+              title="Export current filtered data to Excel"
+            >
+              <FileSpreadsheet className="h-3.5 w-3.5" />
+              Excel
+            </Button>
+            <Button
+              variant="outline" size="sm"
+              className="h-8 text-xs gap-1.5 border-rose-200 text-rose-700 hover:bg-rose-50"
+              disabled={filtered.length === 0 || loading}
+              onClick={handleExportPDF}
+              title="Export current filtered data to PDF"
+            >
+              <FileText className="h-3.5 w-3.5" />
+              PDF
+            </Button>
+          </div>
          
         </div>
 
@@ -611,7 +715,7 @@ export default function AdminDashboardPage() {
           <Table className="min-w-150">
             <TableHeader>
               <TableRow className="bg-slate-50/80 hover:bg-slate-50/80">
-                {["Name", "Group", "District", "Status", "Phone", "Date", "Action"].map((h) => (
+                {["Name", "Group", "District", "Location", "Status", "Phone", "Date", "Action"].map((h) => (
                   <TableHead key={h} className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">
                     {h}
                   </TableHead>
@@ -622,14 +726,14 @@ export default function AdminDashboardPage() {
               {loading ? (
                 Array.from({ length: 5 }).map((_, i) => (
                   <TableRow key={i}>
-                    {Array.from({ length: 7 }).map((_, j) => (
+                    {Array.from({ length: 8 }).map((_, j) => (
                       <TableCell key={j}><Skeleton className="h-4 w-20" /></TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : paginated.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-16 text-center text-slate-400">
+                  <TableCell colSpan={8} className="py-16 text-center text-slate-400">
                     <Users className="mx-auto mb-2 h-8 w-8 opacity-30" />
                     <p className="text-sm font-medium">No registrations found</p>
                     {hasFilters && (
@@ -675,6 +779,9 @@ export default function AdminDashboardPage() {
 
                       {/* District */}
                       <TableCell className="text-sm text-slate-600">{reg.district}</TableCell>
+
+                      {/* Location */}
+                      <TableCell className="text-sm text-slate-500">{reg.location ?? "—"}</TableCell>
 
                       {/* Status */}
                       <TableCell>
@@ -759,7 +866,7 @@ export default function AdminDashboardPage() {
       <section className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <button
           className="rounded-2xl bg-white border border-slate-100 shadow-sm p-5 text-left hover:shadow-md transition-shadow group"
-          onClick={() => toast.info("Export feature coming soon.")}
+          onClick={handleExportExcel}
         >
           <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center mb-3 group-hover:bg-blue-200 transition-colors">
             <Download className="h-5 w-5 text-[#133358]" />

@@ -11,20 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { DISTRICTS, DISTRICT_LOCATIONS } from "@/constants";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const GROUP_OPTIONS = ["Youth", "Adult", "Campus", "Children"];
-const DISTRICT_OPTIONS = [
-  "Sefwi Asawinso",
-  "Sefwi Bodi",
-  "Sefwi Juaboso",
-  "Sefwi Boako",
-  "Sefwi Dwenase",
-  "Sefwi Wiawso",
-  "Mile 3",
-  "Sefwi Nsawora",
-];
 const STATUS_OPTIONS = ["Member", "Visitor"];
 const GENDER_OPTIONS = ["Male", "Female"];
 
@@ -32,6 +23,7 @@ const EMPTY_FORM = {
   fullName: "",
   group: "",
   district: "",
+  location: "",
   status: "",
   gender: "",
   phone: "",
@@ -56,6 +48,8 @@ const fieldClass =
 export default function AdminRegisterPage() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [submitting, setSubmitting] = useState(false);
+
+  const locationOptions = form.district ? (DISTRICT_LOCATIONS[form.district] ?? []) : [];
 
   const isValid =
     form.fullName.trim() &&
@@ -97,7 +91,7 @@ export default function AdminRegisterPage() {
   return (
     <div className="max-w-5xl mx-auto">
       {/* ── Page heading ─────────────────────────────────────────────── */}
-      <div className="mb-10 flex items-end justify-between">
+      <div className="mb-6 sm:mb-10 flex items-end justify-between">
         <div className="space-y-1">
           {/* Breadcrumb */}
           <nav className="flex space-x-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
@@ -124,7 +118,7 @@ export default function AdminRegisterPage() {
         <form onSubmit={handleSubmit} className="divide-y divide-slate-100">
 
           {/* Section 1 — Personal Information */}
-          <div className="p-8 grid grid-cols-12 gap-8">
+          <div className="p-4 sm:p-8 grid grid-cols-12 gap-4 sm:gap-8">
             <div className="col-span-12 lg:col-span-4">
               <h3 className="text-base font-bold text-[#133358] mb-1">
                 Personal Information
@@ -133,7 +127,7 @@ export default function AdminRegisterPage() {
                 Basic identification and contact details for the retreat attendee.
               </p>
             </div>
-            <div className="col-span-12 lg:col-span-8 space-y-5">
+            <div className="col-span-12 lg:col-span-8 space-y-4 sm:space-y-5">
               {/* Full Name */}
               <div>
                 <FieldLabel>Full Name</FieldLabel>
@@ -146,7 +140,7 @@ export default function AdminRegisterPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 {/* Gender */}
                 <div>
                   <FieldLabel>Gender</FieldLabel>
@@ -176,7 +170,7 @@ export default function AdminRegisterPage() {
                 </div>
 
                 {/* Email */}
-                <div className="col-span-2">
+                <div className="col-span-1 sm:col-span-2">
                   <FieldLabel>
                     Email Address{" "}
                     <span className="normal-case text-slate-400 font-normal tracking-normal">
@@ -197,7 +191,7 @@ export default function AdminRegisterPage() {
           </div>
 
           {/* Section 2 — Church Affiliation */}
-          <div className="p-8 grid grid-cols-12 gap-8 bg-slate-50/40">
+          <div className="p-4 sm:p-8 grid grid-cols-12 gap-4 sm:gap-8 bg-slate-50/40">
             <div className="col-span-12 lg:col-span-4">
               <h3 className="text-base font-bold text-[#133358] mb-1">
                 Church Affiliation
@@ -207,7 +201,7 @@ export default function AdminRegisterPage() {
               </p>
             </div>
             <div className="col-span-12 lg:col-span-8">
-              <div className="grid grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                 {/* Group */}
                 <div>
                   <FieldLabel>Group</FieldLabel>
@@ -218,21 +212,6 @@ export default function AdminRegisterPage() {
                     <SelectContent>
                       {GROUP_OPTIONS.map((g) => (
                         <SelectItem key={g} value={g}>{g}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* District */}
-                <div>
-                  <FieldLabel>District</FieldLabel>
-                  <Select value={form.district} onValueChange={(v) => setForm({ ...form, district: v })}>
-                    <SelectTrigger className={fieldClass}>
-                      <SelectValue placeholder="Select district" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DISTRICT_OPTIONS.map((d) => (
-                        <SelectItem key={d} value={d}>{d}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -252,12 +231,49 @@ export default function AdminRegisterPage() {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {/* District */}
+                <div>
+                  <FieldLabel>District</FieldLabel>
+                  <Select
+                    value={form.district}
+                    onValueChange={(v) => setForm({ ...form, district: v, location: "" })}
+                  >
+                    <SelectTrigger className={fieldClass}>
+                      <SelectValue placeholder="Select district" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DISTRICTS.map((d) => (
+                        <SelectItem key={d} value={d}>{d}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Location */}
+                <div>
+                  <FieldLabel>Area / Location</FieldLabel>
+                  <Select
+                    value={form.location}
+                    onValueChange={(v) => setForm({ ...form, location: v })}
+                    disabled={locationOptions.length === 0}
+                  >
+                    <SelectTrigger className={fieldClass}>
+                      <SelectValue placeholder={locationOptions.length === 0 ? "Select district first" : "Select area"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {locationOptions.map((l) => (
+                        <SelectItem key={l} value={l}>{l}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="px-8 py-5 bg-slate-50 flex items-center justify-between">
+          <div className="px-4 sm:px-8 py-4 sm:py-5 bg-slate-50 flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-3 sm:gap-0 sm:justify-between">
             <div className="flex items-center gap-1.5 text-slate-400 text-xs italic">
               <Lock className="h-3.5 w-3.5 shrink-0" />
               Secure processing for retreat records.
@@ -265,7 +281,7 @@ export default function AdminRegisterPage() {
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                className="px-5 py-2.5 text-slate-600 font-bold text-sm hover:bg-slate-200 transition-colors rounded-lg"
+                className="flex-1 sm:flex-none px-5 py-2.5 text-slate-600 font-bold text-sm hover:bg-slate-200 transition-colors rounded-lg text-center"
                 onClick={() => setForm(EMPTY_FORM)}
               >
                 Clear
@@ -273,7 +289,7 @@ export default function AdminRegisterPage() {
               <button
                 type="submit"
                 disabled={!isValid || submitting}
-                className="px-7 py-2.5 bg-[#133358] text-white font-bold text-sm rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 sm:flex-none px-7 py-2.5 bg-[#133358] text-white font-bold text-sm rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <UserCheck className="h-4 w-4" />
                 {submitting ? "Registering…" : "Register Attendee"}

@@ -28,6 +28,7 @@ export type RegistrationMinAggregateOutputType = {
   id: string | null
   group: string | null
   district: string | null
+  location: string | null
   status: string | null
   fullName: string | null
   gender: string | null
@@ -40,6 +41,7 @@ export type RegistrationMaxAggregateOutputType = {
   id: string | null
   group: string | null
   district: string | null
+  location: string | null
   status: string | null
   fullName: string | null
   gender: string | null
@@ -52,6 +54,7 @@ export type RegistrationCountAggregateOutputType = {
   id: number
   group: number
   district: number
+  location: number
   status: number
   fullName: number
   gender: number
@@ -66,6 +69,7 @@ export type RegistrationMinAggregateInputType = {
   id?: true
   group?: true
   district?: true
+  location?: true
   status?: true
   fullName?: true
   gender?: true
@@ -78,6 +82,7 @@ export type RegistrationMaxAggregateInputType = {
   id?: true
   group?: true
   district?: true
+  location?: true
   status?: true
   fullName?: true
   gender?: true
@@ -90,6 +95,7 @@ export type RegistrationCountAggregateInputType = {
   id?: true
   group?: true
   district?: true
+  location?: true
   status?: true
   fullName?: true
   gender?: true
@@ -175,6 +181,7 @@ export type RegistrationGroupByOutputType = {
   id: string
   group: string
   district: string
+  location: string | null
   status: string
   fullName: string
   gender: string
@@ -208,24 +215,28 @@ export type RegistrationWhereInput = {
   id?: Prisma.StringFilter<"Registration"> | string
   group?: Prisma.StringFilter<"Registration"> | string
   district?: Prisma.StringFilter<"Registration"> | string
+  location?: Prisma.StringNullableFilter<"Registration"> | string | null
   status?: Prisma.StringFilter<"Registration"> | string
   fullName?: Prisma.StringFilter<"Registration"> | string
   gender?: Prisma.StringFilter<"Registration"> | string
   phone?: Prisma.StringFilter<"Registration"> | string
   email?: Prisma.StringNullableFilter<"Registration"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
+  altarCalls?: Prisma.AltarCallListRelationFilter
 }
 
 export type RegistrationOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   group?: Prisma.SortOrder
   district?: Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  altarCalls?: Prisma.AltarCallOrderByRelationAggregateInput
 }
 
 export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
@@ -236,17 +247,20 @@ export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RegistrationWhereInput | Prisma.RegistrationWhereInput[]
   group?: Prisma.StringFilter<"Registration"> | string
   district?: Prisma.StringFilter<"Registration"> | string
+  location?: Prisma.StringNullableFilter<"Registration"> | string | null
   status?: Prisma.StringFilter<"Registration"> | string
   fullName?: Prisma.StringFilter<"Registration"> | string
   gender?: Prisma.StringFilter<"Registration"> | string
   email?: Prisma.StringNullableFilter<"Registration"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
+  altarCalls?: Prisma.AltarCallListRelationFilter
 }, "id" | "phone">
 
 export type RegistrationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   group?: Prisma.SortOrder
   district?: Prisma.SortOrder
+  location?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -265,6 +279,7 @@ export type RegistrationScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Registration"> | string
   group?: Prisma.StringWithAggregatesFilter<"Registration"> | string
   district?: Prisma.StringWithAggregatesFilter<"Registration"> | string
+  location?: Prisma.StringNullableWithAggregatesFilter<"Registration"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"Registration"> | string
   fullName?: Prisma.StringWithAggregatesFilter<"Registration"> | string
   gender?: Prisma.StringWithAggregatesFilter<"Registration"> | string
@@ -277,54 +292,63 @@ export type RegistrationCreateInput = {
   id?: string
   group: string
   district: string
+  location?: string | null
   status: string
   fullName: string
   gender: string
   phone: string
   email?: string | null
   createdAt?: Date | string
+  altarCalls?: Prisma.AltarCallCreateNestedManyWithoutRegistrationInput
 }
 
 export type RegistrationUncheckedCreateInput = {
   id?: string
   group: string
   district: string
+  location?: string | null
   status: string
   fullName: string
   gender: string
   phone: string
   email?: string | null
   createdAt?: Date | string
+  altarCalls?: Prisma.AltarCallUncheckedCreateNestedManyWithoutRegistrationInput
 }
 
 export type RegistrationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   group?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  altarCalls?: Prisma.AltarCallUpdateManyWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   group?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.StringFieldUpdateOperationsInput | string
   phone?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  altarCalls?: Prisma.AltarCallUncheckedUpdateManyWithoutRegistrationNestedInput
 }
 
 export type RegistrationCreateManyInput = {
   id?: string
   group: string
   district: string
+  location?: string | null
   status: string
   fullName: string
   gender: string
@@ -337,6 +361,7 @@ export type RegistrationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   group?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.StringFieldUpdateOperationsInput | string
@@ -349,6 +374,7 @@ export type RegistrationUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   group?: Prisma.StringFieldUpdateOperationsInput | string
   district?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   gender?: Prisma.StringFieldUpdateOperationsInput | string
@@ -361,6 +387,7 @@ export type RegistrationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   group?: Prisma.SortOrder
   district?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   status?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -373,6 +400,7 @@ export type RegistrationMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   group?: Prisma.SortOrder
   district?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   status?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
@@ -385,12 +413,18 @@ export type RegistrationMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   group?: Prisma.SortOrder
   district?: Prisma.SortOrder
+  location?: Prisma.SortOrder
   status?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type RegistrationNullableScalarRelationFilter = {
+  is?: Prisma.RegistrationWhereInput | null
+  isNot?: Prisma.RegistrationWhereInput | null
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -405,24 +439,141 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type RegistrationCreateNestedOneWithoutAltarCallsInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutAltarCallsInput, Prisma.RegistrationUncheckedCreateWithoutAltarCallsInput>
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutAltarCallsInput
+  connect?: Prisma.RegistrationWhereUniqueInput
+}
+
+export type RegistrationUpdateOneWithoutAltarCallsNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutAltarCallsInput, Prisma.RegistrationUncheckedCreateWithoutAltarCallsInput>
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutAltarCallsInput
+  upsert?: Prisma.RegistrationUpsertWithoutAltarCallsInput
+  disconnect?: Prisma.RegistrationWhereInput | boolean
+  delete?: Prisma.RegistrationWhereInput | boolean
+  connect?: Prisma.RegistrationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationUpdateToOneWithWhereWithoutAltarCallsInput, Prisma.RegistrationUpdateWithoutAltarCallsInput>, Prisma.RegistrationUncheckedUpdateWithoutAltarCallsInput>
+}
+
+export type RegistrationCreateWithoutAltarCallsInput = {
+  id?: string
+  group: string
+  district: string
+  location?: string | null
+  status: string
+  fullName: string
+  gender: string
+  phone: string
+  email?: string | null
+  createdAt?: Date | string
+}
+
+export type RegistrationUncheckedCreateWithoutAltarCallsInput = {
+  id?: string
+  group: string
+  district: string
+  location?: string | null
+  status: string
+  fullName: string
+  gender: string
+  phone: string
+  email?: string | null
+  createdAt?: Date | string
+}
+
+export type RegistrationCreateOrConnectWithoutAltarCallsInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutAltarCallsInput, Prisma.RegistrationUncheckedCreateWithoutAltarCallsInput>
+}
+
+export type RegistrationUpsertWithoutAltarCallsInput = {
+  update: Prisma.XOR<Prisma.RegistrationUpdateWithoutAltarCallsInput, Prisma.RegistrationUncheckedUpdateWithoutAltarCallsInput>
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutAltarCallsInput, Prisma.RegistrationUncheckedCreateWithoutAltarCallsInput>
+  where?: Prisma.RegistrationWhereInput
+}
+
+export type RegistrationUpdateToOneWithWhereWithoutAltarCallsInput = {
+  where?: Prisma.RegistrationWhereInput
+  data: Prisma.XOR<Prisma.RegistrationUpdateWithoutAltarCallsInput, Prisma.RegistrationUncheckedUpdateWithoutAltarCallsInput>
+}
+
+export type RegistrationUpdateWithoutAltarCallsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RegistrationUncheckedUpdateWithoutAltarCallsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  group?: Prisma.StringFieldUpdateOperationsInput | string
+  district?: Prisma.StringFieldUpdateOperationsInput | string
+  location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type RegistrationCountOutputType
+ */
+
+export type RegistrationCountOutputType = {
+  altarCalls: number
+}
+
+export type RegistrationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  altarCalls?: boolean | RegistrationCountOutputTypeCountAltarCallsArgs
+}
+
+/**
+ * RegistrationCountOutputType without action
+ */
+export type RegistrationCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RegistrationCountOutputType
+   */
+  select?: Prisma.RegistrationCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * RegistrationCountOutputType without action
+ */
+export type RegistrationCountOutputTypeCountAltarCallsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AltarCallWhereInput
+}
 
 
 export type RegistrationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   group?: boolean
   district?: boolean
+  location?: boolean
   status?: boolean
   fullName?: boolean
   gender?: boolean
   phone?: boolean
   email?: boolean
   createdAt?: boolean
+  altarCalls?: boolean | Prisma.Registration$altarCallsArgs<ExtArgs>
+  _count?: boolean | Prisma.RegistrationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["registration"]>
 
 export type RegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   group?: boolean
   district?: boolean
+  location?: boolean
   status?: boolean
   fullName?: boolean
   gender?: boolean
@@ -435,6 +586,7 @@ export type RegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   group?: boolean
   district?: boolean
+  location?: boolean
   status?: boolean
   fullName?: boolean
   gender?: boolean
@@ -447,6 +599,7 @@ export type RegistrationSelectScalar = {
   id?: boolean
   group?: boolean
   district?: boolean
+  location?: boolean
   status?: boolean
   fullName?: boolean
   gender?: boolean
@@ -455,15 +608,24 @@ export type RegistrationSelectScalar = {
   createdAt?: boolean
 }
 
-export type RegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "group" | "district" | "status" | "fullName" | "gender" | "phone" | "email" | "createdAt", ExtArgs["result"]["registration"]>
+export type RegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "group" | "district" | "location" | "status" | "fullName" | "gender" | "phone" | "email" | "createdAt", ExtArgs["result"]["registration"]>
+export type RegistrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  altarCalls?: boolean | Prisma.Registration$altarCallsArgs<ExtArgs>
+  _count?: boolean | Prisma.RegistrationCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type RegistrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type RegistrationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $RegistrationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Registration"
-  objects: {}
+  objects: {
+    altarCalls: Prisma.$AltarCallPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     group: string
     district: string
+    location: string | null
     status: string
     fullName: string
     gender: string
@@ -864,6 +1026,7 @@ readonly fields: RegistrationFieldRefs;
  */
 export interface Prisma__RegistrationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  altarCalls<T extends Prisma.Registration$altarCallsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$altarCallsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AltarCallPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -896,6 +1059,7 @@ export interface RegistrationFieldRefs {
   readonly id: Prisma.FieldRef<"Registration", 'String'>
   readonly group: Prisma.FieldRef<"Registration", 'String'>
   readonly district: Prisma.FieldRef<"Registration", 'String'>
+  readonly location: Prisma.FieldRef<"Registration", 'String'>
   readonly status: Prisma.FieldRef<"Registration", 'String'>
   readonly fullName: Prisma.FieldRef<"Registration", 'String'>
   readonly gender: Prisma.FieldRef<"Registration", 'String'>
@@ -919,6 +1083,10 @@ export type RegistrationFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  /**
    * Filter, which Registration to fetch.
    */
   where: Prisma.RegistrationWhereUniqueInput
@@ -937,6 +1105,10 @@ export type RegistrationFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Exte
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  /**
    * Filter, which Registration to fetch.
    */
   where: Prisma.RegistrationWhereUniqueInput
@@ -954,6 +1126,10 @@ export type RegistrationFindFirstArgs<ExtArgs extends runtime.Types.Extensions.I
    * Omit specific fields from the Registration
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
   /**
    * Filter, which Registration to fetch.
    */
@@ -1003,6 +1179,10 @@ export type RegistrationFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Exten
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  /**
    * Filter, which Registration to fetch.
    */
   where?: Prisma.RegistrationWhereInput
@@ -1050,6 +1230,10 @@ export type RegistrationFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Omit specific fields from the Registration
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
   /**
    * Filter, which Registrations to fetch.
    */
@@ -1099,6 +1283,10 @@ export type RegistrationCreateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  /**
    * The data needed to create a Registration.
    */
   data: Prisma.XOR<Prisma.RegistrationCreateInput, Prisma.RegistrationUncheckedCreateInput>
@@ -1146,6 +1334,10 @@ export type RegistrationUpdateArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the Registration
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
   /**
    * The data needed to update a Registration.
    */
@@ -1213,6 +1405,10 @@ export type RegistrationUpsertArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  /**
    * The filter to search for the Registration to update in case it exists.
    */
   where: Prisma.RegistrationWhereUniqueInput
@@ -1239,6 +1435,10 @@ export type RegistrationDeleteArgs<ExtArgs extends runtime.Types.Extensions.Inte
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  /**
    * Filter which Registration to delete.
    */
   where: Prisma.RegistrationWhereUniqueInput
@@ -1259,6 +1459,30 @@ export type RegistrationDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
 }
 
 /**
+ * Registration.altarCalls
+ */
+export type Registration$altarCallsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AltarCall
+   */
+  select?: Prisma.AltarCallSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AltarCall
+   */
+  omit?: Prisma.AltarCallOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AltarCallInclude<ExtArgs> | null
+  where?: Prisma.AltarCallWhereInput
+  orderBy?: Prisma.AltarCallOrderByWithRelationInput | Prisma.AltarCallOrderByWithRelationInput[]
+  cursor?: Prisma.AltarCallWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AltarCallScalarFieldEnum | Prisma.AltarCallScalarFieldEnum[]
+}
+
+/**
  * Registration without action
  */
 export type RegistrationDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1270,4 +1494,8 @@ export type RegistrationDefaultArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the Registration
    */
   omit?: Prisma.RegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
 }

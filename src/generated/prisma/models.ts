@@ -9,4 +9,5 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/Registration'
+export type * from './models/AltarCall'
 export type * from './commonInputTypes'

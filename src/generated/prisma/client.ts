@@ -46,3 +46,8 @@ export { Prisma }
  * 
  */
 export type Registration = Prisma.RegistrationModel
+/**
+ * Model AltarCall
+ * 
+ */
+export type AltarCall = Prisma.AltarCallModel

@@ -12,6 +12,7 @@ model Registration {
 
   group     String
   district  String
+  location  String?
   status    String
 
   fullName  String
@@ -20,4 +21,23 @@ model Registration {
   email     String?
 
   createdAt DateTime @default(now())
+
+  altarCalls AltarCall[]
+}
+
+model AltarCall {
+  id             String   @id @default(uuid())
+
+  phone          String
+  fullName       String
+  district       String?
+  location       String?
+  isFirstTimer   Boolean?
+
+  registrationId String?
+  registration   Registration? @relation(fields: [registrationId], references: [id])
+
+  createdAt      DateTime @default(now())
+
+  @@index([phone])
 }

@@ -384,7 +384,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Registration: 'Registration'
+  Registration: 'Registration',
+  AltarCall: 'AltarCall'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -400,7 +401,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "registration"
+    modelProps: "registration" | "altarCall"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -478,6 +479,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AltarCall: {
+      payload: Prisma.$AltarCallPayload<ExtArgs>
+      fields: Prisma.AltarCallFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AltarCallFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AltarCallFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>
+        }
+        findFirst: {
+          args: Prisma.AltarCallFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AltarCallFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>
+        }
+        findMany: {
+          args: Prisma.AltarCallFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>[]
+        }
+        create: {
+          args: Prisma.AltarCallCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>
+        }
+        createMany: {
+          args: Prisma.AltarCallCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AltarCallCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>[]
+        }
+        delete: {
+          args: Prisma.AltarCallDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>
+        }
+        update: {
+          args: Prisma.AltarCallUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>
+        }
+        deleteMany: {
+          args: Prisma.AltarCallDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AltarCallUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AltarCallUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>[]
+        }
+        upsert: {
+          args: Prisma.AltarCallUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AltarCallPayload>
+        }
+        aggregate: {
+          args: Prisma.AltarCallAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAltarCall>
+        }
+        groupBy: {
+          args: Prisma.AltarCallGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AltarCallGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AltarCallCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AltarCallCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -521,6 +596,7 @@ export const RegistrationScalarFieldEnum = {
   id: 'id',
   group: 'group',
   district: 'district',
+  location: 'location',
   status: 'status',
   fullName: 'fullName',
   gender: 'gender',
@@ -530,6 +606,20 @@ export const RegistrationScalarFieldEnum = {
 } as const
 
 export type RegistrationScalarFieldEnum = (typeof RegistrationScalarFieldEnum)[keyof typeof RegistrationScalarFieldEnum]
+
+
+export const AltarCallScalarFieldEnum = {
+  id: 'id',
+  phone: 'phone',
+  fullName: 'fullName',
+  district: 'district',
+  location: 'location',
+  isFirstTimer: 'isFirstTimer',
+  registrationId: 'registrationId',
+  createdAt: 'createdAt'
+} as const
+
+export type AltarCallScalarFieldEnum = (typeof AltarCallScalarFieldEnum)[keyof typeof AltarCallScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -587,6 +677,13 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -699,6 +796,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   registration?: Prisma.RegistrationOmit
+  altarCall?: Prisma.AltarCallOmit
 }
 
 /* Types for Logging */

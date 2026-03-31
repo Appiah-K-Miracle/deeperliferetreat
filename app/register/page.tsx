@@ -1,8 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { DISTRICT_LOCATIONS } from "@/constants";
 
-const DISTRICTS = ["Sefwi Asawinso", "Sefwi Bodi", "Sefwi Juaboso", "Sefwi Boako", "Sefwi Dwenase", "Sefwi Wiawso", "Mile 3", "Sefwi Nsawora"];
+const DISTRICTS = [
+  "Sefwi Asawinso",
+  "Sefwi Bodi",
+  "Sefwi Juaboso",
+  "Sefwi Boako",
+  "Sefwi Dwenase",
+  "Sefwi Wiawso",
+  "Mile 3",
+  "Sefwi Nsawora",
+];
 const GROUPS = ["Youth", "Adult", "Campus", "Children"];
 
 function normalizePhone(phone: string): string {
@@ -20,6 +30,7 @@ function isValidGhanaPhone(phone: string): boolean {
 type FormData = {
   group: string;
   district: string;
+  location: string;
   status: string;
   fullName: string;
   gender: string;
@@ -32,6 +43,7 @@ export default function RegisterPage() {
   const [form, setForm] = useState<FormData>({
     group: "",
     district: "",
+    location: "",
     status: "",
     fullName: "",
     gender: "",
@@ -41,6 +53,22 @@ export default function RegisterPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [otherLocation, setOtherLocation] = useState("");
+
+  const goBack = () => {
+    if (step === 4) {
+      const locs = DISTRICT_LOCATIONS[form.district] ?? [];
+      if (locs.length > 0) {
+        setForm({ ...form, location: "" });
+        setOtherLocation("");
+        setStep(3);
+      } else {
+        setStep(2);
+      }
+    } else {
+      setStep(step - 1);
+    }
+  };
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -53,7 +81,7 @@ export default function RegisterPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        setStep(9);
+        setStep(10);
       } else {
         setError(data.error ?? "Registration failed. Please try again.");
       }
@@ -65,14 +93,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#133358]  flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-[#133358] flex items-center justify-center px-4 py-10">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Progress bar */}
-        {step < 9 && (
+        {step < 10 && (
           <div className="w-full bg-gray-200 h-1.5">
             <div
               className="bg-blue-600 h-1.5 transition-all duration-300"
-              style={{ width: `${(step / 8) * 100}%` }}
+              style={{ width: `${(step / 9) * 100}%` }}
             />
           </div>
         )}
@@ -105,23 +133,84 @@ export default function RegisterPage() {
               <h2 className="text-xl font-bold text-blue-950">
                 Select your district
               </h2>
-              {DISTRICTS.map((d) => (
-                <button
-                  key={d}
-                  onClick={() => {
-                    setForm({ ...form, district: d });
-                    setStep(3);
-                  }}
-                  className="w-full border-2 border-blue-200 hover:border-blue-600 hover:bg-blue-50 text-blue-900 font-semibold py-4 rounded-xl text-lg"
-                >
-                  {d}
-                </button>
-              ))}
+              <div className="grid grid-cols-2 gap-3">
+                {DISTRICTS.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => {
+                      const locs = DISTRICT_LOCATIONS[d] ?? [];
+                      if (locs.length > 0) {
+                        setForm({ ...form, district: d, location: "" });
+                        setStep(3);
+                      } else {
+                        setForm({ ...form, district: d, location: "" });
+                        setStep(4);
+                      }
+                    }}
+                    className="border-2 border-blue-200 hover:border-blue-600 hover:bg-blue-50 text-blue-900 font-semibold py-4 px-3 rounded-xl text-sm text-center"
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
-          {/* Step 3: Member Status */}
+          {/* Step 3: Location */}
           {step === 3 && (
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-bold text-blue-950">
+                Select your area
+              </h2>
+              <div className="grid grid-cols-2 gap-3">
+                {(DISTRICT_LOCATIONS[form.district] ?? []).map((loc) => (
+                  <button
+                    key={loc}
+                    onClick={() => {
+                      if (loc === "Others") {
+                        setForm({ ...form, location: "Others" });
+                      } else {
+                        setForm({ ...form, location: loc });
+                        setStep(4);
+                      }
+                    }}
+                    className={`border-2 font-semibold py-4 px-3 rounded-xl text-sm text-center ${
+                      form.location === loc
+                        ? "border-blue-600 bg-blue-50 text-blue-900"
+                        : "border-blue-200 hover:border-blue-600 hover:bg-blue-50 text-blue-900"
+                    }`}
+                  >
+                    {loc}
+                  </button>
+                ))}
+              </div>
+              {form.location === "Others" && (
+                <div className="flex flex-col gap-3 mt-1">
+                  <input
+                    type="text"
+                    autoFocus
+                    placeholder="Type your area..."
+                    value={otherLocation}
+                    onChange={(e) => setOtherLocation(e.target.value)}
+                    className="w-full border-2 border-gray-200 focus:border-blue-600 outline-none rounded-xl px-4 py-3 text-base"
+                  />
+                  <button
+                    disabled={!otherLocation.trim()}
+                    onClick={() => {
+                      setForm({ ...form, location: otherLocation.trim() });
+                      setStep(4);
+                    }}
+                    className="w-full bg-blue-700 hover:bg-blue-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-lg"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Step 4: Member Status */}
+          {step === 4 && (
             <div className="flex flex-col gap-4">
               <h2 className="text-xl font-bold text-blue-950">
                 Are you a member or visitor?
@@ -131,7 +220,7 @@ export default function RegisterPage() {
                   key={s}
                   onClick={() => {
                     setForm({ ...form, status: s.toLowerCase() });
-                    setStep(4);
+                    setStep(5);
                   }}
                   className="w-full border-2 border-blue-200 hover:border-blue-600 hover:bg-blue-50 text-blue-900 font-semibold py-4 rounded-xl text-lg"
                 >
@@ -141,8 +230,8 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Step 4: Full Name */}
-          {step === 4 && (
+          {/* Step 5: Full Name */}
+          {step === 5 && (
             <div className="flex flex-col gap-6">
               <div>
                 <h2 className="text-xl font-bold text-blue-950">
@@ -162,7 +251,7 @@ export default function RegisterPage() {
               />
               <button
                 disabled={!form.fullName.trim()}
-                onClick={() => setStep(5)}
+                onClick={() => setStep(6)}
                 className="w-full bg-blue-700 hover:bg-blue-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-lg"
               >
                 Next
@@ -170,8 +259,8 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Step 5: Gender */}
-          {step === 5 && (
+          {/* Step 6: Gender */}
+          {step === 6 && (
             <div className="flex flex-col gap-4">
               <h2 className="text-xl font-bold text-blue-950">
                 What is your gender?
@@ -179,7 +268,7 @@ export default function RegisterPage() {
               <button
                 onClick={() => {
                   setForm({ ...form, gender: "male" });
-                  setStep(6);
+                  setStep(7);
                 }}
                 className="w-full border-2 border-blue-200 hover:border-blue-600 hover:bg-blue-50 text-blue-900 font-semibold py-4 rounded-xl text-lg"
               >
@@ -188,7 +277,7 @@ export default function RegisterPage() {
               <button
                 onClick={() => {
                   setForm({ ...form, gender: "female" });
-                  setStep(6);
+                  setStep(7);
                 }}
                 className="w-full border-2 border-blue-200 hover:border-blue-600 hover:bg-blue-50 text-blue-900 font-semibold py-4 rounded-xl text-lg"
               >
@@ -197,8 +286,8 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Step 6: Phone */}
-          {step === 6 && (
+          {/* Step 7: Phone */}
+          {step === 7 && (
             <div className="flex flex-col gap-6">
               <div>
                 <h2 className="text-xl font-bold text-blue-950">
@@ -232,7 +321,7 @@ export default function RegisterPage() {
                   }
                   setPhoneError("");
                   setForm({ ...form, phone: normalized });
-                  setStep(7);
+                  setStep(8);
                 }}
                 className="w-full bg-blue-700 hover:bg-blue-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-4 rounded-xl text-lg"
               >
@@ -241,8 +330,8 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Step 7: Email */}
-          {step === 7 && (
+          {/* Step 8: Email */}
+          {step === 8 && (
             <div className="flex flex-col gap-6">
               <div>
                 <h2 className="text-xl font-bold text-blue-950">
@@ -263,7 +352,7 @@ export default function RegisterPage() {
                 className="w-full border-2 border-gray-200 focus:border-blue-600 outline-none rounded-xl px-4 py-4 text-lg"
               />
               <button
-                onClick={() => setStep(8)}
+                onClick={() => setStep(9)}
                 className="w-full bg-blue-700 hover:bg-blue-800 text-white font-semibold py-4 rounded-xl text-lg"
               >
                 Review &amp; Confirm
@@ -271,7 +360,7 @@ export default function RegisterPage() {
               <button
                 onClick={() => {
                   setForm({ ...form, email: "" });
-                  setStep(8);
+                  setStep(9);
                 }}
                 className="w-full text-gray-400 text-sm underline"
               >
@@ -280,8 +369,8 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Step 8: Confirmation */}
-          {step === 8 && (
+          {/* Step 9: Confirmation */}
+          {step === 9 && (
             <div className="flex flex-col gap-6">
               <div>
                 <h2 className="text-xl font-bold text-blue-950">
@@ -304,6 +393,12 @@ export default function RegisterPage() {
                   <span className="font-medium text-gray-800">District</span>
                   <span>{form.district}</span>
                 </div>
+                {form.location && (
+                  <div className="flex justify-between">
+                    <span className="font-medium text-gray-800">Area</span>
+                    <span>{form.location}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="font-medium text-gray-800">Group</span>
                   <span className="capitalize">{form.group}</span>
@@ -336,8 +431,8 @@ export default function RegisterPage() {
             </div>
           )}
 
-          {/* Step 9: Success */}
-          {step === 9 && (
+          {/* Step 10: Success */}
+          {step === 10 && (
             <div className="flex flex-col items-center gap-6 text-center py-4">
               <div className="text-6xl">✅</div>
               <div>
@@ -358,6 +453,12 @@ export default function RegisterPage() {
                   <span className="font-medium text-gray-700">District:</span>{" "}
                   {form.district}
                 </p>
+                {form.location && (
+                  <p>
+                    <span className="font-medium text-gray-700">Area:</span>{" "}
+                    {form.location}
+                  </p>
+                )}
                 <p>
                   <span className="font-medium text-gray-700">Status:</span>{" "}
                   {form.status}
@@ -373,6 +474,7 @@ export default function RegisterPage() {
                   setForm({
                     group: "",
                     district: "",
+                    location: "",
                     status: "",
                     fullName: "",
                     gender: "",
@@ -388,9 +490,9 @@ export default function RegisterPage() {
           )}
 
           {/* Back button */}
-          {step > 1 && step < 9 && (
+          {step > 1 && step < 10 && (
             <button
-              onClick={() => setStep(step - 1)}
+              onClick={goBack}
               className="mt-6 text-gray-400 text-sm hover:text-gray-600"
             >
               ← Back

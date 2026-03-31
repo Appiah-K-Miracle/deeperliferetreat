@@ -66,6 +66,7 @@ export async function POST(req: Request) {
       data: {
         group: body.group,
         district: body.district,
+        location: body.location || null,
         status: body.status,
         fullName: body.fullName,
         gender: body.gender,

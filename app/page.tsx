@@ -9,8 +9,8 @@ export default function Home() {
 <Image
   src="/deeperlifelogo.png"
   alt="Soul Winners Retreat Logo"
-  width={120}
-  height={120}
+  width={200}
+  height={200}
   className="mx-auto mb-4"
 />
         </div>
