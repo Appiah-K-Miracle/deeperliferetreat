@@ -21,9 +21,16 @@ export default function Home() {
         </p>
         <Link
           href="/register"
-          className="bg-white text-[#164C86] font-semibold text-lg px-8 py-4 rounded-xl hover:bg-blue-50"
+          className="bg-white text-[#164C86] font-semibold text-lg px-8 py-2 w-full rounded-xl hover:bg-blue-50"
         >
-          Register Now →
+          Retreat Registration Now
+        </Link>
+
+         <Link
+          href="/altarcall"
+          className="bg-white text-[#164C86] font-semibold text-lg px-8 py-2 w-full rounded-xl hover:bg-blue-50"
+        >
+          Altar Call Registration
         </Link>
       </div>
     </div>
